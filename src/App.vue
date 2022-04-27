@@ -1,16 +1,16 @@
 <template>
 <div class="container">
-  <Header />
-  <AddTask @add-task="addTask" :tasks="tasks"/>
+  <Header @toggle-add-task="toggleAddTask" />
+  <div v-if="showAddTask">
+    <AddTask @add-task="addTask" :tasks="tasks"/>
+  </div>
   <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks"/>
-  <Button text="Add Task" color="green"/>
 </div>
   
 </template>
 
 <script>
 import Header from './components/Header.vue'
-import Button from './components/Button.vue'
 import Tasks from './components/Tasks.vue'
 import AddTask from './components/AddTask.vue'
 
@@ -18,18 +18,21 @@ export default {
   name: 'App',
   components: {
     Header,
-    Button,
     Tasks,
     AddTask
   },
   data() {
     return {
-      tasks: []
+      tasks: [],
+      showAddTask: false
     }
   },
   methods: {
     addTask(task) {
       this.tasks = [...this.tasks, task]
+    },
+    toggleAddTask(){
+      this.showAddTask = !this.showAddTask
     },
     deleteTask(id) {
       if(confirm('Are you sure you would like to delete this?')){
