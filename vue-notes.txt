@@ -1,0 +1,6 @@
+Basic Layout of a Vue Component:
+    1. <template>: html output
+    2. <script>: javascript, logic, declare props and data, use methods that are linked to component
+    3. <style>: style for just this component
+
+Vuex: state manager for global state in larger applications (like Redux)
