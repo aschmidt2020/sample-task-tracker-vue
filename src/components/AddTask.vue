@@ -46,7 +46,7 @@ export default {
             }
 
             let newTask = {
-                id: this.tasks.length,
+                // id: this.tasks.length, --> do not need when working with json-server
                 text: this.text,
                 day: this.day,
                 reminder: this.reminder

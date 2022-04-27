@@ -1,7 +1,7 @@
 <template>
     <header>
         <h1>Task Tracker</h1>
-        <Button @toggle-add-task="$emit('toggle-add-task')" text="Add Task" color="green" />
+        <Button @toggle-add-task="$emit('toggle-add-task')" :text="showAddTask ? 'Close' : 'Add Task'" :color="showAddTask ? 'red' : 'green'" />
     </header>
 </template>
 
@@ -13,6 +13,9 @@
         name: 'Header',
         components: {
             Button
+        },
+        props: {
+            showAddTask: Boolean
         }
     }
 </script>

@@ -4,3 +4,5 @@ Basic Layout of a Vue Component:
     3. <style>: style for just this component
 
 Vuex: state manager for global state in larger applications (like Redux)
+
+Fake REST API: https://www.npmjs.com/package/json-server,

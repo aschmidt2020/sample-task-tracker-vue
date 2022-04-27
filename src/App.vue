@@ -1,95 +1,112 @@
 <template>
-<div class="container">
-  <Header @toggle-add-task="toggleAddTask" />
-  <div v-if="showAddTask">
-    <AddTask @add-task="addTask" :tasks="tasks"/>
+  <div class="container">
+    <Header @toggle-add-task="toggleAddTask" :showAddTask="showAddTask" />
+    <div v-if="showAddTask">
+      <AddTask @add-task="addTask" :tasks="tasks" />
+    </div>
+    <Tasks
+      @toggle-reminder="toggleReminder"
+      @delete-task="deleteTask"
+      :tasks="tasks"
+    />
   </div>
-  <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks"/>
-</div>
-  
 </template>
 
 <script>
-import Header from './components/Header.vue'
-import Tasks from './components/Tasks.vue'
-import AddTask from './components/AddTask.vue'
+import Header from "./components/Header.vue";
+import Tasks from "./components/Tasks.vue";
+import AddTask from "./components/AddTask.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Header,
     Tasks,
-    AddTask
+    AddTask,
   },
   data() {
     return {
       tasks: [],
-      showAddTask: false
-    }
+      showAddTask: false,
+    };
   },
   methods: {
-    addTask(task) {
-      this.tasks = [...this.tasks, task]
+    async addTask(task) {
+      let response = await fetch("api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(task),
+      });
+
+      let data = await response.json();
+      console.log(data);
+      // this.tasks = [...this.tasks, data] --> can use this to update UI or make another call
+      this.tasks = await this.fetchTasks();
     },
-    toggleAddTask(){
-      this.showAddTask = !this.showAddTask
+    toggleAddTask() {
+      this.showAddTask = !this.showAddTask;
     },
-    deleteTask(id) {
-      if(confirm('Are you sure you would like to delete this?')){
-        this.tasks = this.tasks.filter((task) => task.id !== id)
+    async deleteTask(id) {
+      if (confirm("Are you sure you would like to delete this?")) {
+        let response = await fetch(`api/tasks/${id}`, {
+          method: "DELETE",
+        });
+        if (response.status === 200) {
+          //this.tasks = this.tasks.filter((task) => task.id !== id)
+          this.tasks = await this.fetchTasks();
+        } else {
+          alert("Error deleting task");
+        }
       }
     },
-    toggleReminder(id){
-      this.tasks = this.tasks.map(function(task) {
-        if(task.id !== id){
-          return task
+    async toggleReminder(id) {
+      let taskToToggle = await this.fetchTask(id)
+      let updatedTask = {...taskToToggle, reminder: !taskToToggle.reminder} 
+      
+      let response = await fetch(`api/tasks/${id}`, {
+          method: "PUT",
+           headers: {
+          "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedTask),
+        });
+
+        if (response.status === 200) {
+          //could use map function to just update UTI if needed
+          this.tasks = await this.fetchTasks();
+        } else {
+          alert("Error toggling task");
         }
-        else {
-          return {
-            id: task.id,
-            text: task.text,
-            day: task.day,
-            reminder: !task.reminder
-          }
-        }
-      }
-      )
-    }
+        
+    },
+    async fetchTasks() {
+      let response = await fetch("api/tasks");
+      let data = await response.json();
+      return data;
+    },
+    async fetchTask(id) {
+      let response = await fetch(`api/tasks/${id}`);
+      let data = await response.json();
+      return data;
+    },
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: 'Doctor Appointment',
-        day: 'March 1 @230pm',
-        reminder: true
-      },
-      {
-        id: 2,
-        text: 'School Meeting',
-        day: 'March 3 @130pm',
-        reminder: true
-      },
-      {
-        id: 3,
-        text: 'Food Shopping',
-        day: 'March 3 @1100am',
-        reminder: false
-      },
-    ]
-  }
-}
+  async created() {
+    this.tasks = await this.fetchTasks();
+  },
+};
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 .container {
   max-width: 500px;
