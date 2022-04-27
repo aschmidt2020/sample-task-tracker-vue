@@ -1,6 +1,7 @@
 <template>
 <div class="container">
   <Header />
+  <Tasks @delete-task="deleteTask" :tasks="tasks"/>
   <Button text="Add Task" color="green"/>
 </div>
   
@@ -9,16 +10,23 @@
 <script>
 import Header from './components/Header.vue'
 import Button from './components/Button.vue'
+import Tasks from './components/Tasks.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
-    Button
+    Button,
+    Tasks
   },
   data() {
     return {
       tasks: []
+    }
+  },
+  methods: {
+    deleteTask(id) {
+      console.log('task', id)
     }
   },
   created() {
