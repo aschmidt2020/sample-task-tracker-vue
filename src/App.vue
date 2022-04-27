@@ -1,6 +1,7 @@
 <template>
 <div class="container">
   <Header />
+  <AddTask @add-task="addTask" :tasks="tasks"/>
   <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks"/>
   <Button text="Add Task" color="green"/>
 </div>
@@ -11,13 +12,15 @@
 import Header from './components/Header.vue'
 import Button from './components/Button.vue'
 import Tasks from './components/Tasks.vue'
+import AddTask from './components/AddTask.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
     Button,
-    Tasks
+    Tasks,
+    AddTask
   },
   data() {
     return {
@@ -25,13 +28,16 @@ export default {
     }
   },
   methods: {
+    addTask(task) {
+      this.tasks = [...this.tasks, task]
+    },
     deleteTask(id) {
       if(confirm('Are you sure you would like to delete this?')){
         this.tasks = this.tasks.filter((task) => task.id !== id)
       }
     },
     toggleReminder(id){
-      this.tasks = this.tasks.map(function(task){
+      this.tasks = this.tasks.map(function(task) {
         if(task.id !== id){
           return task
         }
@@ -44,7 +50,6 @@ export default {
           }
         }
       }
-
       )
     }
   },
