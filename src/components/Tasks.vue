@@ -1,6 +1,6 @@
 <template>
   <div :key="task.id" v-for="task in tasks">
-      <Task @delete-task="deleteTask" :task="task"/>
+      <Task @toggle-reminder="toggleReminder" @delete-task="deleteTask" :task="task"/>
   </div>
 </template>
 
@@ -21,9 +21,12 @@ export default {
         // I wanted to keep the data sent along with the initial emit so using this method accomplished that
         deleteTask(id) {
             this.$emit('delete-task', id)
+        },
+        toggleReminder(id){
+            this.$emit('toggle-reminder', id)
         }
     },
-    emits: ['delete-task']
+    emits: ['delete-task', 'toggle-reminder']
 
 }
 </script>

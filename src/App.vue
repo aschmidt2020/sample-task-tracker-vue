@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <Header />
-  <Tasks @delete-task="deleteTask" :tasks="tasks"/>
+  <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks"/>
   <Button text="Add Task" color="green"/>
 </div>
   
@@ -29,6 +29,23 @@ export default {
       if(confirm('Are you sure you would like to delete this?')){
         this.tasks = this.tasks.filter((task) => task.id !== id)
       }
+    },
+    toggleReminder(id){
+      this.tasks = this.tasks.map(function(task){
+        if(task.id !== id){
+          return task
+        }
+        else {
+          return {
+            id: task.id,
+            text: task.text,
+            day: task.day,
+            reminder: !task.reminder
+          }
+        }
+      }
+
+      )
     }
   },
   created() {
