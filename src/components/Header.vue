@@ -1,7 +1,7 @@
 <template>
     <header>
         <h1>Task Tracker</h1>
-        <Button @toggle-add-task="$emit('toggle-add-task')" :text="showAddTask ? 'Close' : 'Add Task'" :color="showAddTask ? 'red' : 'green'" />
+        <Button v-show="homePage" @toggle-add-task="$emit('toggle-add-task')" :text="showAddTask ? 'Close' : 'Add Task'" :color="showAddTask ? 'red' : 'green'" />
     </header>
 </template>
 
@@ -16,6 +16,16 @@
         },
         props: {
             showAddTask: Boolean
+        },
+        computed: {
+            homePage() {
+                if(this.$route.path === '/'){
+                    return true
+                }
+                else{
+                    return false
+                }
+            }
         }
     }
 </script>
